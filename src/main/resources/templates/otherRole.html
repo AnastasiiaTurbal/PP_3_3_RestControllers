@@ -4,12 +4,11 @@
     <title>Spring Security Example</title>
 </head>
 <body>
-<h1>Welcome to Index PAGE!</h1>
-<div>
-    <br/>
-    <form th:method="POST" th:action="@{/login}">
-        <input type="submit" value="Log in"/>
-    </form>
-</div>
+<h1>You don't have user or admin authorities</h1>
+<br/>
+<br/>
+<form th:method="GET" th:action="@{/logout}">
+    <input style="background-color: LightCoral" type="submit" value="Log out"/>
+</form>
 </body>
 </html>

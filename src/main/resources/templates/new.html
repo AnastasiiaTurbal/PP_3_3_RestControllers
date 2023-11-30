@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New</title>
+</head>
+<body>
+<br/>
+<form th:method="GET" th:action="@{/logout}">
+    <input style="background-color: LightCoral" type="submit" value="Log out"/>
+</form>
+<br/>
+<br/>
+<form th:method="POST" th:action="@{/admin/new}" th:object="${user}">
+    <br/>
+    <label for="username">Username:</label>
+    <input type="text" th:field="*{username}" id="username" required/>
+    <br/>
+    <label for="password">Password:</label>
+    <input type="text" th:field="*{password}" id="password" required/>
+    <br/>
+    <label for="age">Age:</label>
+    <input type="text" th:field="*{age}" id="age"/>
+    <br/>
+    <!-- <label for="roles">Roles:</label>
+    <input type="text" th:field="*{roles}" id="roles"/>
+    <br/> -->
+    <label>Roles:
+        <input type="checkbox" name="roles"
+               th:each="role : ${allRoles}"
+               th:text="${role.name}"
+               th:value="${role.id}"
+               th:field="*{roles}"
+        />
+    </label>
+    <br/>
+    <br/>
+    <input type="submit" value="add User"/>
+</form>
+</body>
+</html>

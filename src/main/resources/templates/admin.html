@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+    <Style>
+        tbody {
+            font-size: 90%;
+            font-style: italic;
+        }
+        tfoot {
+            font-weight: bold;
+        }
+    </Style>
+</head>
+<body>
+<div>
+    <br/>
+        <form th:method="GET" th:action="@{/logout}">
+            <input style="background-color: LightCoral" type="submit" value="Log out"/>
+        </form>
+    <br/>
+    <br/>
+    <a>
+        <form th:method="GET" th:action="@{/admin/new}">
+            <input type="submit" value="Add new user"/>
+        </form>
+    </a>
+    <br/>
+    <table border = "0" title="1" width = "60%">
+        <!-- <table border = "0" title="1" width = "40%"  style=”margin-left:10px> -->
+        <colgroup>
+            <col style="width:10%">
+            <col style="width:20%">
+            <col style="width:20%">
+            <col style="width:10%">
+            <col style="width:20%">
+            <col style="width:10%">
+            <col style="width:10%">
+        </colgroup>
+        <thead>
+        <tr style="background-color: MediumTurquoise">
+            <th scope="col">Id</th>
+            <th scope="col">Username</th>
+            <th scope="col">Password</th>
+            <th scope="col">Age</th>
+            <th scope="col">Role</th>
+            <th scope="col">      </th>
+            <th scope="col">      </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, iterStat : ${users}"
+            th:style="${iterStat.even}? 'background-color: PaleTurquoise;':'background-color: LightCyan;'">
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getUsername()}"></td>
+            <td th:text="${user.getPassword()}"></td>
+            <td align="center" th:text="${user.getAge()}"></td>
+            <td>
+                <ul>
+                    <li th:each="role: ${user.getRoles()}" th:text="${role}"></li>
+                    <!--<li th:each="role: ${user.getRoles()}" th:text="${role.getName()}"></li> -->
+                </ul>
+            </td>
+            <td align="center">
+                <form th:method="GET" th:action="@{/admin/{id}/edit(id=${user.getId()})}">
+                    <input type="submit" value="Edit"/>
+                </form>
+            <td align="center">
+                <form th:method="DELETE" th:action="@{/admin/{id}/delete(id=${user.getId()})}">
+                    <input type="submit" value="Delete"/>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
