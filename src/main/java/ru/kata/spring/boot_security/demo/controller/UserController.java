@@ -35,30 +35,32 @@ public class UserController {
         return "/admin";
     }
 
-    @GetMapping("/admin/new")
-    public String newUser(Model model) {
+    @GetMapping("/adminNew")
+    public String newUser(Model model, Principal principal) {
         model.addAttribute("user", new User());
         model.addAttribute("allRoles", roleService.findAllRoles());
-        return "/new";
+        model.addAttribute("currentUser", userService.findUserByUserName(principal.getName()));
+        model.addAttribute("users", userService.getUsers());
+        return "/adminNew";
     }
 
-    @PostMapping("/admin/new")
+    @PostMapping("/adminNew/new")
     public String addUser(@ModelAttribute("user") User user) {
         userService.addUser(user);
-        return "redirect:/admin";
+        return "redirect:/adminNew";
     }
 
-    @GetMapping("/admin/{id}/edit")
+    @GetMapping("/adminNew/{id}/edit")
     public String editUser(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.showUser(id));
         model.addAttribute("allRoles", roleService.findAllRoles());
         return "/edit";
     }
 
-    @PatchMapping("/admin/{id}/edit")
+    @PatchMapping("/adminNew/{id}/edit")
     public String updateUserByAdmin(@ModelAttribute("user") User user) {
         userService.updateUser(user);
-        return "redirect:/admin";
+        return "redirect:/adminNew";
     }
 
     @DeleteMapping ("/admin/{id}/delete")

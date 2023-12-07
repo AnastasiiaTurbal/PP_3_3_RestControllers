@@ -1,15 +1,98 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>Spring Security Example</title>
+    <!--<style>
+        body {padding: 30px}
+    </style> -->
 </head>
 <body>
-<h1>Welcome to Index PAGE!</h1>
+<p>What's wrong with this stupid style...</p>
+<nav class="navbar navbar-expand-lg navbar-default bg-light"> <!-- создание меню -->
+    <!-- <div class="container-fluid">
+        <div class="navbar-header">
+            <p class="navbar-brand">ЛОГО САЙТА</p> --> <!-- заголовок сайта + гиперссылка на представление -->
+        <!-- </div> -->
+    <a class="navbar-brand" href="#">ITPROGER</a>
+        <div>
+            <ul class="navbar-nav">
+                <li class="active"><a  class="nav-link" href="#">Главная</a></li> <!-- list item, active - инфо для странички активной на текущий момент -->
+                <li><a  class="nav-link" href="#">Не главная 1</a></li>
+                <li><a  class="nav-link" href="#">Не главная 2</a></li>
+            </ul>
+        </div>
+    <div class="text-right">
+        <br/>
+        <form th:method="POST" th:action="@{/login}">
+            <input type="submit" class="btn" value="Log in"/>
+        </form>
+    </div>
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn">
+            <input type="checkbox">Text1
+        </label>
+        <label class="btn">
+            <input type="checkbox">Text2
+        </label>
+        <label class="btn">
+            <input type="checkbox">Text3
+        </label>
+    </div>
+    <!--</div> -->
+</nav>
+<div class="toolbar">
+    <div class="btn-group btn-group-toggle btn-group-lg" data-toggle="buttons">
+        <label class="btn">
+            <input type="checkbox">Text1
+        </label>
+        <label class="btn">
+            <input type="checkbox">Text2
+        </label>
+        <label class="btn">
+            <input type="checkbox">Text3
+        </label>
+    </div>
+    <br/>
+    <br/>
+    <div class="btn-group-vertical btn-group-toggle btn-group-lg" data-toggle="buttons">
+        <label class="btn">
+            <input type="radio">Text1
+        </label>
+        <label class="btn">
+            <input type="radio">Text2
+        </label>
+        <label class="btn">
+            <input type="radio">Text3
+        </label>
+    </div>
+</div>
+
+
+<!-- <nav class="navbar navbar-expand-lg navbar-default bg-light">
+    <a class="navbar-brand" href="#">ITPROGER</a>
+
+<div class="container-fluid" style="background-color: Silver">  fluid растягивает блок на всю ширину экрана
+    <h1>Welcome to Index PAGE!</h1> заголовок
+    <div class="row"> создаем ряд
+        <div class="col-md-6" style="background-color: Azure">Первый блок</div> создаем в ряду блок и указываем сколько столбцов из 12 будет занимать блок
+        <div class="col-md-3" style="background-color: AliceBlue">Второй блок</div> можно вложить внутрь еще  <div class="row">,который также состоит из 12 столбцов
+        <div class="col-md-3" style="background-color: LightSteelBlue">Третий блок</div>
+    </div>
+</div>
 <div>
     <br/>
     <form th:method="POST" th:action="@{/login}">
         <input type="submit" value="Log in"/>
     </form>
-</div>
+</div> -->
 </body>
 </html>

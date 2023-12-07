@@ -19,7 +19,7 @@ public class User implements UserDetails {
     private Long id;
     @Column (name = "username", nullable = false, unique = true)
     private String username;
-    @Column
+    @Column (name="age")
     private int age;
     @Column (name = "password", nullable = false)
     private String password;
@@ -36,6 +36,13 @@ public class User implements UserDetails {
     public User(String username, String password, Collection<Role> roles) {
         this.username = username;
         this.password = password;
+        this.roles = roles;
+    }
+
+    public User(String username, String password, int age, Collection<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.age = age;
         this.roles = roles;
     }
 
