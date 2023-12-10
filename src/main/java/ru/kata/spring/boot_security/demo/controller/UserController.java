@@ -25,54 +25,36 @@ public class UserController {
     }
 
     @GetMapping("/otherRole")
-    public String showStartPage() {
-    return "/otherRole";
+    public String showStartPage(Model model, Principal principal) {
+        model.addAttribute("currentUser", userService.findUserByUserName(principal.getName()));
+        return "/otherRole";
     }
 
-    @GetMapping("/admin")
-    public String getUsers(Model model) {
-        model.addAttribute("users", userService.getUsers());
-        return "/admin";
-    }
-
-    @GetMapping("/adminNew")
-    public String newUser(Model model, Principal principal) {
+    @GetMapping("/index")
+    public String showAdminPage(Model model, Principal principal) {
         model.addAttribute("user", new User());
         model.addAttribute("allRoles", roleService.findAllRoles());
         model.addAttribute("currentUser", userService.findUserByUserName(principal.getName()));
         model.addAttribute("users", userService.getUsers());
-        return "/adminNew";
+        return "index";
     }
 
-    @PostMapping("/adminNew/new")
+    @PostMapping("/index/new")
     public String addUser(@ModelAttribute("user") User user) {
         userService.addUser(user);
-        return "redirect:/adminNew";
+        return "redirect:/index";
     }
 
-    @GetMapping("/adminNew/{id}/edit")
-    public String editUser(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.showUser(id));
-        model.addAttribute("allRoles", roleService.findAllRoles());
-        return "/edit";
-    }
-
-    @PatchMapping("/adminNew/{id}/edit")
+    @PatchMapping("/index/{id}/edit")
     public String updateUserByAdmin(@ModelAttribute("user") User user) {
         userService.updateUser(user);
-        return "redirect:/adminNew";
+        return "redirect:/index";
     }
 
-    @DeleteMapping ("/admin/{id}/delete")
+    @DeleteMapping ("/index/{id}/delete")
     public String deleteUser(@ModelAttribute("user") User user) {
         userService.deleteUser(user.getId());
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/user")
-    public String getUser(Model model, Principal principal) {
-        model.addAttribute("user", userService.findUserByUserName(principal.getName()));
-        return "user";
+        return "redirect:/index";
     }
 
 }

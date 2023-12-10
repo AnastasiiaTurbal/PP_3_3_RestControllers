@@ -22,6 +22,5 @@ public class UserResource {
     @PostMapping()
     public void update(@RequestBody User user) {
         userService.updateUser(user);
-        //return userService.showUser(user.getId());
     }
 }

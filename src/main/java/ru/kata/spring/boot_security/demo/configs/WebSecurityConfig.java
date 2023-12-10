@@ -40,9 +40,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/index").permitAll()
-                .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/admin/**").hasAnyRole("ADMIN")
+                .antMatchers("/", "/login").permitAll()
+                .antMatchers("/index**").hasAnyRole("ADMIN", "USER")
                 .antMatchers("/otherRole").permitAll()
                 .and()
                 .formLogin()
@@ -50,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
-                .logoutSuccessUrl("/")
+                .logoutSuccessUrl("/login")
                 .permitAll();
     }
 

@@ -9,44 +9,43 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>New</title>
     <style>
-        body, html, #wrapper {
+        body, html {
             width: 100%;
             position: relative;
             height: 100%;
-            /*font-family: 'Poppins', sans-serif;*/
             color: black;
         }
-
-        label{
+        label {
             font-weight: bold;
+        }
+        #container {
+            width: 500px !important;
         }
     </style>
 </head>
 
 <body style="background-color: WhiteSmoke">
-<div class="container-fluid bg-dark text-light sticky-top">
-    <div class="row justify-content-between align-self-center">
-        <div class="col-10 align-self-center">
-            <ul class="list-inline pt-3"  style="font-size: 20px">
-                <li class="list-inline-item" style="font-weight: bold" th:text="${currentUser.getUsername()}">username</li>
-                <li class="list-inline-item" style="font-weight: lighter">with roles:</li>
-                <li class="list-inline-item" style="font-weight: lighter" th:each="role, iterStat : ${currentUser.getRoles()}" th:text="*{role}">
-                    roles
-                </li>
-            </ul>
-        </div>
-        <div id="main" class="col-2 align-self-center">
-            <form th:method="GET" th:action="@{/logout}">
-                <input class="btn btn-link text-light" type="submit" value="Log out"/>
+<br/>
+<div id="container" class="container">
+    <div class="row justify-content-center">
+        <div class="col">
+            <h2>Please sign in</h2>
+            <div th:if="${param.error}">
+                Invalid username and password.</div>
+            <div th:if="${param.logout}">
+                You have been logged out.</div>
+            <form th:action="@{/login}" method="post">
+                <div>
+                    <input class="col-8 form-control mb-3" type="text" name="username" placeholder="Username"/>
+                </div>
+                <div>
+                    <input class="col-8 form-control mb-3" type="password" name="password" placeholder="Password"/>
+                </div>
+                <input class="btn btn-primary col-8" type="submit" value="Sign in" />
             </form>
         </div>
     </div>
 </div>
-
-<div class="row mt-3 ml-3" style="color: crimson">
-    <h4>You don't have user or admin authorities</h4>
-</div>
-
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
