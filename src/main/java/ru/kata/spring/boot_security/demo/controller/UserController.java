@@ -39,22 +39,4 @@ public class UserController {
         return "index";
     }
 
-    @PostMapping("/index/new")
-    public String addUser(@ModelAttribute("user") User user) {
-        userService.addUser(user);
-        return "redirect:/index";
-    }
-
-    @PatchMapping("/index/{id}/edit")
-    public String updateUserByAdmin(@ModelAttribute("user") User user) {
-        userService.updateUser(user);
-        return "redirect:/index";
-    }
-
-    @DeleteMapping ("/index/{id}/delete")
-    public String deleteUser(@ModelAttribute("user") User user) {
-        userService.deleteUser(user.getId());
-        return "redirect:/index";
-    }
-
 }

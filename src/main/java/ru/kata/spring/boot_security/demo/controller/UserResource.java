@@ -1,11 +1,14 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserResource {
 
     private final UserService userService;
@@ -14,13 +17,37 @@ public class UserResource {
         this.userService = userService;
     }
 
+    @GetMapping()
+    public List<User> getAllUsers() {
+        return userService.getUsers();
+    }
+
+    //вариант с передачей кода статуса (возвращаемые объект оборачиваем в ResponseEntity. Если void, то ResponseEntity<?>)
+    /*@GetMapping()
+    public ResponseEntity<List<User>> read() { //помимо статуса возвращает список пользователей
+        final List<User> users = userService.getUsers();
+        return ((users != null) && (!users.isEmpty())) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND); //в базе как минимум должен быть админ. В принципе, можно убрать проверку, т.к. должен выводить пустую таблицу, если все пользователи удалены
+    }*/
+
+    @PostMapping()
+    public void addUser(@RequestBody User user) { //@RequestBody говорит о том, что зачение параметра user подставляется из тела запроса
+        userService.addUser(user);
+    }
+
     @GetMapping("/{userId}")
-    public User findById(@PathVariable long userId) {
+    public User getUser(@PathVariable long userId) {
         return userService.showUser(userId);
     }
 
-    @PostMapping()
-    public void update(@RequestBody User user) {
+    @PutMapping("/{userId}")
+    public void updateUser(@PathVariable long userId, @RequestBody User user) {
+        user.setId(userId);
         userService.updateUser(user);
     }
+
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@PathVariable long userId) {
+        userService.deleteUser(userId);
+    }
+
 }
