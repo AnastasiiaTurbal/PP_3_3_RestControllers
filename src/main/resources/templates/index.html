@@ -30,7 +30,9 @@
             <ul class="list-inline pt-3"  style="font-size: 20px">
                 <li class="list-inline-item" style="font-weight: bold" sec:authentication="name">username</li>
                 <li class="list-inline-item" style="font-weight: lighter">with roles:</li>
-                <li class="list-inline-item" style="font-weight: lighter" sec:authentication="principal.authorities">role</li></ul>
+                <li class="list-inline-item" style="font-weight: lighter"
+                    th:each="role : ${currentUser.getRoles()}"  th:text="${role.name}"></li>
+            </ul>
         </div>
         <div class="col-2 align-self-center">
             <form th:method="GET" th:action="@{/logout}">
@@ -44,7 +46,7 @@
     <div class="col-2 pr-0 pl-2" style="background-color: white">
         <div class="nav flex-column nav-pills pt-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             <a sec:authorize="hasRole('ROLE_ADMIN')" class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Admin</a>
-            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" th:data-userId="${user.id}" aria-selected="false">User</a>
+            <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" th:data-userId="${currentUser.id}" aria-selected="false">User</a>
         </div>
     </div>
 
@@ -61,7 +63,7 @@
                 <div class="container">
                     <div class="row">
                         <ul class="nav nav-tabs">
-                            <li class="nav-item" role="presentation"><button class="nav-link active" href="#usersTable" data-toggle="tab">Users table</button></li>
+                            <li class="nav-item" role="presentation"><button class="nav-link active" href="#usersTablePanel" data-toggle="tab">Users table</button></li>
                             <li class="nav-item" role="presentation"><button class="nav-link" href="#newUser" data-toggle="tab">New User</button></li>
                         </ul>
                     </div>
@@ -69,8 +71,8 @@
                     <!--СОДЕРЖИМОЕ ВКЛАДОК USERs TABLE и NEW USER-->
                     <div class="row">
                         <div class="tab-content col-md-12" id="myTabContent">
-                            <!--ВКЛАДКА USER TABLE-->
-                            <div class="tab-pane fade show active" id="usersTable" role="tabpanel" aria-labelledby="usersTable-tab" >
+                            <!--ВКЛАДКА USERs TABLE-->
+                            <div class="tab-pane fade show active" id="usersTablePanel" role="tabpanel" aria-labelledby="usersTable-tab" >
                                 <div class="row border pt-2">
                                     <div class="col-md-12">
                                         <h5>All users</h5>
@@ -78,7 +80,7 @@
                                 </div>
                                 <div class="row justify-content-md-left border py-3" style="background-color: white">
                                     <div class="col-md-12">
-                                        <table class="table table-striped" border = "0" title="1">
+                                        <table id="usersTable" class="table table-striped" border = "0" title="1">
                                             <colgroup>
                                                 <col style="width:10%">
                                                 <col style="width:25%">
@@ -97,34 +99,7 @@
                                                 <th scope="col">Delete</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                            <tr th:each="user, iterStat : ${users}">
-                                                <td class="align-middle" th:text="${user.getId()}"></td>
-                                                <td class="align-middle" th:text="${user.getUsername()}"></td>
-                                                <td class="align-middle" th:text="${user.getAge()}"></td>
-                                                <td class="align-middle">
-                                                    <ul class="list-inline mt-3">
-                                                        <li class="list-inline-item align-middle" th:each="role: ${user.getRoles()}" th:text="*{role}"></li>
-                                                    </ul>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <button id="edit-user" type="button"
-                                                            class="btn btn-primary border-0 py-1" style="background-color: DarkCyan"
-                                                            data-toggle="modal" data-target="#userDialog"
-                                                            th:data-userId="${user.id}" th:data-event="edit">
-                                                        Edit
-                                                    </button>
-                                                <td class="align-middle">
-                                                    <button id="delete-user" type="button"
-                                                            class="btn btn-primary border-0 py-1"
-                                                            style="background-color: Crimson; color: white"
-                                                            data-toggle="modal" data-target="#userDialog"
-                                                            th:data-userId="${user.id}" th:data-event="delete">
-                                                        Delete
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            </tbody>
+                                            <tbody></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -138,12 +113,12 @@
                                 </div>
                                 <div class="row justify-content-md-center border py-3" style="background-color: white">
                                     <div class="col-md-4">
-                                        <form>
+                                        <form id="newUserForm">
                                             <div class="form-group">
                                                 <div class="text-center" style="vertical-align: bottom">
                                                     <label for="username-add">Username</label>
                                                 </div>
-                                                <input type="text" class="form-control form-control-sm" placeholder="Username" id="username-add" name="password" required/>
+                                                <input type="text" class="form-control form-control-sm" placeholder="Username" id="username-add" name="username" required/>
                                             </div>
                                             <div class="form-group">
                                                 <div class="text-center">
@@ -155,14 +130,14 @@
                                                 <div class="text-center">
                                                     <label for="age-add">Age</label>
                                                 </div>
-                                                <input type="text" class="form-control form-control-sm" placeholder="Age" id="age-add" name="add"/>
+                                                <input type="text" class="form-control form-control-sm" placeholder="Age" id="age-add" name="age"/>
                                             </div>
                                             <div class="form-group">
                                                 <div class="text-center">
-                                                    <label for="roles">Role</label>
+                                                    <label for="roles-add">Role</label>
                                                 </div>
-                                                <select class="form-control" id="roles" multiple size="2">
-                                                    <option th:each="role : ${allRoles}"  th:text="${role.name}" th:value="${role.id}" ></option>
+                                               <select class="form-control" id="roles-add" multiple size="2" name="roles">
+                                                   <option th:each="role : ${allRoles}"  th:text="${role.name}" th:value="${role.id}"></option>
                                                 </select>
                                             </div>
                                             <div class="text-center">
@@ -175,13 +150,12 @@
                         </div>
                     </div>
                     <!--МОДАЛЬНОЕ ОКНО ДЛЯ EDIT И DELETE -->
-                    <!--заменить id и aria-labelledby на какое-то общее для edit и delete -->
                     <div class="modal fade" id="userDialog" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="userDialogLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content col-md-10">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="userDialogLabel">Edit user</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <h5 class="modal-title" id="userDialogLabel"></h5>
+                                    <button id="closeUserDialogInHeader" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
@@ -191,41 +165,40 @@
                                             <div class="container col-md-8">
                                                 <div class="form-group">
                                                     <div class="text-center">
-                                                        <label for="id-edit">ID</label>
+                                                        <label for="id">ID</label>
                                                     </div>
-                                                    <input  type="text" readonly class="form-control form-control-sm" id="id-edit" name="id"/>
+                                                    <input  type="text" readonly class="form-control form-control-sm" id="id" name="id"/>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="text-center">
-                                                        <label for="username-edit">Username</label>
+                                                        <label for="username">Username</label>
                                                     </div>
-                                                    <input  type="text" class="form-control form-control-sm" id="username-edit" name="username" required/>
+                                                    <input  type="text" class="form-control form-control-sm" id="username" name="username" required/>
                                                 </div>
                                                 <div id = "password-form" class="form-group">
                                                     <div class="text-center">
-                                                        <label for="password-edit">Password</label>
+                                                        <label for="password">Password</label>
                                                     </div>
-                                                    <input type="password" class="form-control form-control-sm"  id="password-edit" name="password"/>
+                                                    <input type="password" class="form-control form-control-sm"  id="password" name="password"/>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="text-center">
-                                                        <label for="age-edit">Age</label>
+                                                        <label for="age">Age</label>
                                                     </div>
-                                                    <input type="text" class="form-control form-control-sm" id="age-edit" name="age"/>
+                                                    <input type="text" class="form-control form-control-sm" id="age" name="age"/>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="text-center">
-                                                        <label for="roles-edit">Role</label>
+                                                        <label for="roles">Role</label>
                                                     </div>
-                                                    <select class="form-control" id="roles-edit" name="roles" multiple size="2">
-                                                        <!--<option th:each="role : ${allRoles}" th:text="${role.name}" th:value="${role.id}" th:selected="${user.roles.contains(role)}"></option> -->
-                                                        <option th:each="role : ${allRoles}" th:text="${role.name}" th:value="${role.id}" th:selected="${user.roles.contains(role)}"></option>
+                                                    <select class="form-control" id="roles" name="rolesEdit" multiple size="2">
+                                                        <option th:each="role : ${allRoles}" th:text="${role.name}" th:value="${role.id}"></option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button id="save-user-button" type="submit" class="btn btn-primary">Edit</button>
+                                                <button id="closeUserDialog" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button id="userDialogButton" type="submit" class="btn btn-primary"></button>
                                             </div>
                                         </form>
                                     </div>
@@ -268,15 +241,15 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr> <!--th:each="user, iterStat : ${users}"> -->
-                                    <td class="align-middle" id="id"></td>
-                                    <td class="align-middle" id="username"></td>
-                                    <td class="align-middle" id="age"></td>
-                                    <!--<td>
+                                <tr>
+                                    <td class="align-middle" th:text="${currentUser.getId()}"></td>
+                                    <td class="align-middle" th:text="${currentUser.getUsername()}"></td>
+                                    <td class="align-middle" th:text="${currentUser.getAge()}"></td>
+                                    <td>
                                         <ul class="list-inline">
                                             <li class="list-inline-item align-middle mt-3" th:each="role: ${currentUser.getRoles()}" th:text="*{role}"></li>
                                         </ul>
-                                    </td> -->
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -293,7 +266,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script>
 
-    const url = 'http://localhost:8080/users/';
+    const url = 'http://localhost:9090/users/';
 
     //РАБОТА С МОДАЛЬНЫМИ ОКНАМИ
     $('#userDialog').on('shown.bs.modal', function (event) {
@@ -302,50 +275,68 @@
         if (userId) {
             fetch(url + userId)
                 .then(res => res.json())
-                .then(data => {
-                    let modal = $(this)
-                    modal.find('#id-edit').val(data.id);
-                    modal.find('#username-edit').val(data.username);
-                    modal.find('#age-edit').val(data.age);
-                    modal.find('#roles-edit').val(data.roles);
+                .then(user => {
+                    let modal = $(this);
+                    modal.find('#id').val(user.id);
+                    modal.find('#username').val(user.username);
+                    modal.find('#age').val(user.age);
+                    modal.find('#roles').val(user.roles);
                 })
             // ДЛЯ МОДАЛЬНОГО ОКНА EDIT
-            if (button.data('event') === 'edit') {
+            if (button.data('action') === 'edit') {
                 document.querySelector('#userDialogLabel').textContent = 'Edit user';
-                document.querySelector('#save-user-button').textContent = 'Edit';
-                [].forEach.call(this.querySelectorAll('input'), function(el) {
-                    if (!(el.id === 'id-edit')) {
+                document.querySelector('#userDialogButton').textContent = 'Edit';
+                [].forEach.call(this.querySelectorAll('input'), function (el) {
+                    if (!(el.id === 'id')) {
                         el.readOnly = false;
                     }
                 });
                 this.querySelector('select').disabled = false;
                 this.querySelector('#password-form').style.display = "";
-                document.getElementById("save-user-button").addEventListener('click', e => {
+                document.getElementById("userDialogButton").addEventListener('click', (e) => {
+                    let rolesEdit = $('[name="rolesEdit"]').val();
+                    let rolesList = [];
+                    rolesEdit.forEach(role => {
+                        rolesList.push({id: role});
+                    })
                     fetch(url + userId, {
                         headers: {"Content-Type": "application/json; charset=utf-8"},
                         method: 'PUT',
                         body: JSON.stringify({
-                            username: this.querySelector('#username-edit').value,
-                            password: this.querySelector('#password-edit').value,
-                            age: this.querySelector('#age-edit').value,
-                            roles: [{id: 1}, {id: 2}]
-                            })
+                            username: this.querySelector('#username').value,
+                            password: this.querySelector('#password').value,
+                            age: this.querySelector('#age').value,
+                            roles: rolesList
+                        })
                     })
                         .then(response => response.json())
-                        location.reload()
                 })
                 // ДЛЯ МОДАЛЬНОГО ОКНА DELETE
-            } else if (button.data('event') === 'delete') {
+            } else if (button.data('action') === 'delete') {
+                let listener = function (event) {
+                    fetch(url + userId, {method: 'DELETE'})
+                };
                 document.querySelector('#userDialogLabel').textContent = 'Delete user';
-                document.querySelector('#save-user-button').textContent = 'Delete';
-                [].forEach.call(this.querySelectorAll('input'), function(el){
+                document.querySelector('#userDialogButton').textContent = 'Delete';
+                [].forEach.call(this.querySelectorAll('input'), function (el) {
                     el.readOnly = true;
                 });
                 this.querySelector('select').disabled = true;
                 this.querySelector('#password-form').style.display = "none";
-                document.getElementById("save-user-button").addEventListener('click', e => {
-                    fetch(url + userId, {method: 'DELETE'})
-                    location.reload()
+                document.getElementById("userDialogButton").addEventListener('click', listener)
+                //очистка данных пользователя при закрытии окна через кнопку в футтере
+                document.getElementById("closeUserDialog").addEventListener('click', () => {
+                    document.getElementById("userDialogButton").removeEventListener('click', listener);
+                    [].forEach.call(this.querySelectorAll('input'), function (el) {
+                        el.value = "";
+                    });
+                })
+                //очистка данных пользователя при закрытии окна через кнопку в хеддере
+                document.getElementById("closeUserDialogInHeader").addEventListener('click', () => {
+                    document.getElementById("userDialogButton").removeEventListener('click', listener);
+                    [].forEach.call(this.querySelectorAll('input'), function (el) {
+                        el.value = "";
+                    });
                 })
             }
         }
@@ -353,6 +344,11 @@
 
     //ДОБАВЛЕНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ
     document.getElementById('addNewUserBtn').addEventListener('click', () => {
+        let roles = $('[name="roles"]').val();
+        let rolesList = [];
+        roles.forEach(role => {
+            rolesList.push({id: role});
+        })
         fetch(url, {
             headers: {"Content-Type": "application/json; charset=utf-8"},
             method: 'POST',
@@ -360,51 +356,56 @@
                 username: document.querySelector('#username-add').value,
                 password: document.querySelector('#password-add').value,
                 age: document.querySelector('#age-add').value,
-                roles: [{id: 1}, {id: 2}]
+                roles: rolesList
             })
         })
             .then(response => response.json())
-        location.reload()
     })
-    //ОТОБРАЖЕНИЕ USER-PAGE
-    /*document.getElementById('v-pills-profile-tab').addEventListener('click', () => {
-        //ПОЛУЧИТЬ ID ЮЗЕРА
-            fetch(url)
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById('id').textContent = data.id;
-                    document.getElementById('username').textContent=data.username;
-                    document.getElementById('age').textContent = data.age;
-                    //modal.find('#roles').val(data.roles);
-                })
-    })*/
 
-
-        $('#v-pills-profile-tab').on('shown.bs.modal', function () {
-        //ПОЛУЧИТЬ ID ЮЗЕРА
-        fetch(url+1)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('id').textContent = data.id;
-                document.getElementById('username').textContent=data.username;
-                document.getElementById('age').textContent = data.age;
-                //modal.find('#roles').val(data.roles);
-            })
-
-
-            /*.then(data => {
-                document.getElementById('id').textContent = data.id;
-                document.getElementById('username').textContent=data.username;
-                document.getElementById('age').textContent = data.age;
-                //modal.find('#roles').val(data.roles);
-            })*/
+    $(function () {
+        getTableWithUsers();
     })
 
     //ОТОБРАЖЕНИЕ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ
-
+    function getTableWithUsers() {
+        let tableBody = document.querySelector('#usersTable tbody');
+        let tableFilling = "";
+        fetch(url)
+            .then(result => result.json())
+            .then(users => {
+                users.forEach(user => {
+                    tableFilling += `<tr>
+                                        <td class="align-middle">${user.id}</td>
+                                        <td class="align-middle">${user.username}</td>
+                                        <td class="align-middle">${user.age}</td>
+                                        <td class="align-middle">
+                                            <ul class="list-inline mt-3">`
+                                                user.roles.forEach(role => {
+                                                    tableFilling += `<li class="list-inline-item align-middle">${role.name}</li>`
+                                                })
+                    tableFilling +=
+                                    `</ul>
+                                    </td>
+                                    <td class="align-middle">
+                                        <button id="edit-user" type="button" data-userid="${user.id}" data-action="edit"
+                                            class="btn btn-primary border-0 py-1"
+                                            style="background-color: DarkCyan" data-toggle="modal"
+                                            data-target="#userDialog"> Edit
+                                        </button>
+                                    </td>
+                                    <td class="align-middle">
+                                        <button id="delete-user" type="button" data-userid="${user.id}" data-action="delete"
+                                            class="btn btn-primary border-0 py-1"
+                                            style="background-color: Crimson; color: white" data-toggle="modal"
+                                            data-target="#userDialog">Delete
+                                        </button>
+                                    </td>
+                                    </tr>`;
+                })
+                tableBody.innerHTML = tableFilling;
+            })
+    }
 
 </script>
-
 </body>
-
 </html>

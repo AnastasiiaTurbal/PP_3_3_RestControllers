@@ -3,8 +3,11 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,13 +24,6 @@ public class UserResource {
     public List<User> getAllUsers() {
         return userService.getUsers();
     }
-
-    //вариант с передачей кода статуса (возвращаемые объект оборачиваем в ResponseEntity. Если void, то ResponseEntity<?>)
-    /*@GetMapping()
-    public ResponseEntity<List<User>> read() { //помимо статуса возвращает список пользователей
-        final List<User> users = userService.getUsers();
-        return ((users != null) && (!users.isEmpty())) ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND); //в базе как минимум должен быть админ. В принципе, можно убрать проверку, т.к. должен выводить пустую таблицу, если все пользователи удалены
-    }*/
 
     @PostMapping()
     public void addUser(@RequestBody User user) { //@RequestBody говорит о том, что зачение параметра user подставляется из тела запроса

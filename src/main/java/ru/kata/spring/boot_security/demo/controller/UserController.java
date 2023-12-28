@@ -32,10 +32,9 @@ public class UserController {
 
     @GetMapping("/index")
     public String showAdminPage(Model model, Principal principal) {
-        model.addAttribute("user", new User());
-        model.addAttribute("allRoles", roleService.findAllRoles());
+        //model.addAttribute("allRoles", roleService.findAllRoles());
         model.addAttribute("currentUser", userService.findUserByUserName(principal.getName()));
-        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("allRoles", roleService.findAllRoles());
         return "index";
     }
 
