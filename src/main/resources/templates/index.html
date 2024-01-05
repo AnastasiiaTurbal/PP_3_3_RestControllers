@@ -6,7 +6,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <!--<link rel="stylesheet" type="text/css" href="../static/style.css">-->
+    <link rel="stylesheet" type="text/css"  th:href="@{/css/style.css}">
+
     <title>Index</title>
     <style>
         body, html {
@@ -264,148 +266,6 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-<script>
-
-    const url = 'http://localhost:9090/users/';
-
-    //РАБОТА С МОДАЛЬНЫМИ ОКНАМИ
-    $('#userDialog').on('shown.bs.modal', function (event) {
-        let button = $(event.relatedTarget);
-        let userId = button.data('userid');
-        if (userId) {
-            fetch(url + userId)
-                .then(res => res.json())
-                .then(user => {
-                    let modal = $(this);
-                    modal.find('#id').val(user.id);
-                    modal.find('#username').val(user.username);
-                    modal.find('#age').val(user.age);
-                    modal.find('#roles').val(user.roles);
-                })
-            // ДЛЯ МОДАЛЬНОГО ОКНА EDIT
-            if (button.data('action') === 'edit') {
-                document.querySelector('#userDialogLabel').textContent = 'Edit user';
-                document.querySelector('#userDialogButton').textContent = 'Edit';
-                [].forEach.call(this.querySelectorAll('input'), function (el) {
-                    if (!(el.id === 'id')) {
-                        el.readOnly = false;
-                    }
-                });
-                this.querySelector('select').disabled = false;
-                this.querySelector('#password-form').style.display = "";
-                document.getElementById("userDialogButton").addEventListener('click', (e) => {
-                    let rolesEdit = $('[name="rolesEdit"]').val();
-                    let rolesList = [];
-                    rolesEdit.forEach(role => {
-                        rolesList.push({id: role});
-                    })
-                    fetch(url + userId, {
-                        headers: {"Content-Type": "application/json; charset=utf-8"},
-                        method: 'PUT',
-                        body: JSON.stringify({
-                            username: this.querySelector('#username').value,
-                            password: this.querySelector('#password').value,
-                            age: this.querySelector('#age').value,
-                            roles: rolesList
-                        })
-                    })
-                        .then(response => response.json())
-                })
-                // ДЛЯ МОДАЛЬНОГО ОКНА DELETE
-            } else if (button.data('action') === 'delete') {
-                let listener = function (event) {
-                    fetch(url + userId, {method: 'DELETE'})
-                };
-                document.querySelector('#userDialogLabel').textContent = 'Delete user';
-                document.querySelector('#userDialogButton').textContent = 'Delete';
-                [].forEach.call(this.querySelectorAll('input'), function (el) {
-                    el.readOnly = true;
-                });
-                this.querySelector('select').disabled = true;
-                this.querySelector('#password-form').style.display = "none";
-                document.getElementById("userDialogButton").addEventListener('click', listener)
-                //очистка данных пользователя при закрытии окна через кнопку в футтере
-                document.getElementById("closeUserDialog").addEventListener('click', () => {
-                    document.getElementById("userDialogButton").removeEventListener('click', listener);
-                    [].forEach.call(this.querySelectorAll('input'), function (el) {
-                        el.value = "";
-                    });
-                })
-                //очистка данных пользователя при закрытии окна через кнопку в хеддере
-                document.getElementById("closeUserDialogInHeader").addEventListener('click', () => {
-                    document.getElementById("userDialogButton").removeEventListener('click', listener);
-                    [].forEach.call(this.querySelectorAll('input'), function (el) {
-                        el.value = "";
-                    });
-                })
-            }
-        }
-    })
-
-    //ДОБАВЛЕНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ
-    document.getElementById('addNewUserBtn').addEventListener('click', () => {
-        let roles = $('[name="roles"]').val();
-        let rolesList = [];
-        roles.forEach(role => {
-            rolesList.push({id: role});
-        })
-        fetch(url, {
-            headers: {"Content-Type": "application/json; charset=utf-8"},
-            method: 'POST',
-            body: JSON.stringify({
-                username: document.querySelector('#username-add').value,
-                password: document.querySelector('#password-add').value,
-                age: document.querySelector('#age-add').value,
-                roles: rolesList
-            })
-        })
-            .then(response => response.json())
-    })
-
-    $(function () {
-        getTableWithUsers();
-    })
-
-    //ОТОБРАЖЕНИЕ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ
-    function getTableWithUsers() {
-        let tableBody = document.querySelector('#usersTable tbody');
-        let tableFilling = "";
-        fetch(url)
-            .then(result => result.json())
-            .then(users => {
-                users.forEach(user => {
-                    tableFilling += `<tr>
-                                        <td class="align-middle">${user.id}</td>
-                                        <td class="align-middle">${user.username}</td>
-                                        <td class="align-middle">${user.age}</td>
-                                        <td class="align-middle">
-                                            <ul class="list-inline mt-3">`
-                                                user.roles.forEach(role => {
-                                                    tableFilling += `<li class="list-inline-item align-middle">${role.name}</li>`
-                                                })
-                    tableFilling +=
-                                    `</ul>
-                                    </td>
-                                    <td class="align-middle">
-                                        <button id="edit-user" type="button" data-userid="${user.id}" data-action="edit"
-                                            class="btn btn-primary border-0 py-1"
-                                            style="background-color: DarkCyan" data-toggle="modal"
-                                            data-target="#userDialog"> Edit
-                                        </button>
-                                    </td>
-                                    <td class="align-middle">
-                                        <button id="delete-user" type="button" data-userid="${user.id}" data-action="delete"
-                                            class="btn btn-primary border-0 py-1"
-                                            style="background-color: Crimson; color: white" data-toggle="modal"
-                                            data-target="#userDialog">Delete
-                                        </button>
-                                    </td>
-                                    </tr>`;
-                })
-                tableBody.innerHTML = tableFilling;
-            })
-    }
-
-</script>
+<script src="/js/app.js" type="text/javascript"></script>
 </body>
 </html>
