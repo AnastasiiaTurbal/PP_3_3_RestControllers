@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userService;
     private final RoleService roleService;
 
-    UserController(UserServiceImpl userService, RoleServiceImpl roleService, PasswordEncoder passwordEncoder) {
+    UserController(UserServiceImpl userService, RoleServiceImpl roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -32,7 +32,6 @@ public class UserController {
 
     @GetMapping("/index")
     public String showAdminPage(Model model, Principal principal) {
-        //model.addAttribute("allRoles", roleService.findAllRoles());
         model.addAttribute("currentUser", userService.findUserByUserName(principal.getName()));
         model.addAttribute("allRoles", roleService.findAllRoles());
         return "index";
