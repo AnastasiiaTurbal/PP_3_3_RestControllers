@@ -32,9 +32,8 @@ public class UserRestController {
         return userService.showUser(userId);
     }
 
-    @PutMapping("/{userId}")
-    public void updateUser(@PathVariable long userId, @RequestBody User user) {
-        user.setId(userId);
+    @PutMapping()
+    public void updateUser(@RequestBody User user) {
         userService.updateUser(user);
     }
 

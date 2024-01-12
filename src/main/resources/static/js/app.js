@@ -150,10 +150,11 @@ function editUserRequest(userId) {
     rolesEdit.forEach(role => {
         rolesList.push({id: role});
     })
-    fetch(url + userId, {
+    fetch(url, {
         headers: {"Content-Type": "application/json; charset=utf-8"},
         method: 'PUT',
         body: JSON.stringify({
+            id: document.querySelector('#id').value,
             username: document.querySelector('#username').value,
             password: document.querySelector('#password').value,
             age: document.querySelector('#age').value,
