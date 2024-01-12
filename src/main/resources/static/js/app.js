@@ -1,6 +1,6 @@
 const url = 'api/users/';
 let table = document.getElementById('usersTable');
-let deleteListener;
+let listener;
 
 getTableWithUsers();
 
@@ -15,7 +15,6 @@ $('#userDialog').on('shown.bs.modal', function (event) {
     if (button.data('action') === 'edit') {
         document.querySelector('#userDialogLabel').textContent = 'Edit user';
         document.querySelector('#userDialogButton').textContent = 'Edit';
-        document.querySelector('#userDialogButton').removeAttribute('data-dismiss');
         [].forEach.call(this.querySelectorAll('input'), function (el) {
             if (!(el.id === 'id')) {
                 el.readOnly = false;
@@ -23,41 +22,39 @@ $('#userDialog').on('shown.bs.modal', function (event) {
         });
         this.querySelector('select').disabled = false;
         this.querySelector('#password-form').style.display = "";
-        document.getElementById("userDialogButton").addEventListener('click', (e) => {
+        listener = function (e) {
             editUserRequest(userId);
-        })
+        }
+        document.getElementById("userDialogButton").addEventListener('click', listener)
 
     // ДЛЯ МОДАЛЬНОГО ОКНА DELETE
     } else if (button.data('action') === 'delete') {
-        //убираем возможность редактирования, меняем текстовое значение кнопок под delete
         document.querySelector('#userDialogLabel').textContent = 'Delete user';
         document.querySelector('#userDialogButton').textContent = 'Delete';
-        document.querySelector('#userDialogButton').setAttribute('data-dismiss', 'modal');
         [].forEach.call(this.querySelectorAll('input'), function (el) {
             el.readOnly = true;
         });
         this.querySelector('select').disabled = true;
         this.querySelector('#password-form').style.display = "none";
-
-        deleteListener = function (e) {
+        listener = function (e) {
             deleteRequest(userId);
         }
-        document.getElementById("userDialogButton").addEventListener('click', deleteListener)
+        document.getElementById("userDialogButton").addEventListener('click', listener)
     }
 }).on('hidden.bs.modal', function (event) {
-    [].forEach.call(document.querySelector('#userDialog').querySelectorAll('input'), function (el) {
-        el.value = "";
-        document.getElementById("userDialogButton").removeEventListener('click', deleteListener);
-    })
+    clearForm(document.querySelector('#userDialog'));
+    document.getElementById("userDialogButton").removeEventListener('click', listener);
 })
-
 
 //ДОБАВЛЕНИЕ НОВОГО ПОЛЬЗОВАТЕЛЯ
 document.getElementById('addNewUserBtn').addEventListener('click', () => {
     createUserRequest();
-    location.reload();
+    clearForm(document.querySelector('#newUserForm'));
+    document.querySelector('#usersTablePanel').setAttribute('class', 'tab-pane fade show active');
+    document.querySelector('#newUser').setAttribute('class', 'tab-pane fade');
+    document.querySelector('#usersTableTabBtn').setAttribute('class', 'nav-link active');
+    document.querySelector('#newUserTabBtn').setAttribute('class', 'nav-link');
 })
-
 
 function fillModalWithUserData(userId, modal) {
     fetch(url + userId)
@@ -71,6 +68,7 @@ function fillModalWithUserData(userId, modal) {
 }
 
 function getTableWithUsers() {
+    document.querySelector('#usersTable tbody').innerHTML = "";
     fetch(url)
         .then(result => result.json())
         .then(users => {
@@ -114,7 +112,6 @@ function addUserToTable(user) {
 }
 
 function deleteRequest(userId) {
-    //alert("html до выпиливания строки с пользователем из таблицы" + table.innerText)
     fetch(url + userId, {method: 'DELETE'})
         .then(() => {
             table.querySelectorAll('tr').forEach(raw => {
@@ -123,7 +120,6 @@ function deleteRequest(userId) {
                     raw.remove()
                 }
             })
-            //alert("html после выпиливания строки с пользователем из таблицы" + table.innerText)
         });
 }
 
@@ -143,6 +139,9 @@ function createUserRequest() {
             roles: rolesList
         })
     })
+        .then(() => {
+            getTableWithUsers()
+        })
 }
 
 function editUserRequest(userId) {
@@ -161,4 +160,14 @@ function editUserRequest(userId) {
             roles: rolesList
         })
     })
+        .then(() => {
+            getTableWithUsers();
+        })
+}
+
+function clearForm(form) {
+    [].forEach.call(form.querySelectorAll('input'), function (el) {
+            el.value = "";
+    });
+    form.querySelector('select').value = "";
 }

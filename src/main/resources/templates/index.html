@@ -6,7 +6,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <!--<link rel="stylesheet" type="text/css" href="../static/style.css">-->
     <link rel="stylesheet" type="text/css"  th:href="@{/css/style.css}">
 
     <title>Index</title>
@@ -30,7 +29,7 @@
     <div class="row justify-content-between">
         <div class="col-10">
             <ul class="list-inline pt-3"  style="font-size: 20px">
-                <li class="list-inline-item" style="font-weight: bold" sec:authentication="name">username</li>
+                <li class="list-inline-item" style="font-weight: bold" th:text="${currentUser.getUsername()}">username</li>
                 <li class="list-inline-item" style="font-weight: lighter">with roles:</li>
                 <li class="list-inline-item" style="font-weight: lighter"
                     th:each="role : ${currentUser.getRoles()}"  th:text="${role.name}"></li>
@@ -65,8 +64,8 @@
                 <div class="container">
                     <div class="row">
                         <ul class="nav nav-tabs">
-                            <li class="nav-item" role="presentation"><button class="nav-link active" href="#usersTablePanel" data-toggle="tab">Users table</button></li>
-                            <li class="nav-item" role="presentation"><button class="nav-link" href="#newUser" data-toggle="tab">New User</button></li>
+                            <li class="nav-item" role="presentation"><button id="usersTableTabBtn" class="nav-link active" href="#usersTablePanel" data-toggle="tab">Users table</button></li>
+                            <li class="nav-item" role="presentation"><button id="newUserTabBtn" class="nav-link" href="#newUser" data-toggle="tab">New User</button></li>
                         </ul>
                     </div>
 
@@ -143,7 +142,7 @@
                                                 </select>
                                             </div>
                                             <div class="text-center">
-                                                <button id="addNewUserBtn" type="submit" class="btn btn-success" data-dismiss="tab-pane">Add new user</button>
+                                                <button id="addNewUserBtn" type="button" class="btn btn-success">Add new user</button>
                                             </div>
                                         </form>
                                     </div>
@@ -200,7 +199,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button id="closeUserDialog" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button id="userDialogButton" type="submit" class="btn btn-primary"></button>
+                                                <button id="userDialogButton" type="button" class="btn btn-primary" data-dismiss="modal"></button>
                                             </div>
                                         </form>
                                     </div>
@@ -227,12 +226,12 @@
                     </div>
                     <div class="row justify-content-md-center border py-3" style="background-color: white">
                         <div class="col-md-12">
-                            <table class="table table-striped" border = "0" title="1" width = "60%">
+                            <table class="table table-striped" border = "0" title="1">
                                 <colgroup>
-                                    <col style="width:5%">
-                                    <col style="width:10%">
-                                    <col style="width:10%">
-                                    <col style="width:35%">
+                                    <col style="width:15%">
+                                    <col style="width:15%">
+                                    <col style="width:20%">
+                                    <col style="width:50%">
                                 </colgroup>
                                 <thead>
                                 <tr>
